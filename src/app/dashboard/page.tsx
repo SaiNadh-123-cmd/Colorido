@@ -4,16 +4,18 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Clock, Calendar, MapPin, QrCode, User, BookOpen, GraduationCap, ArrowRight } from "lucide-react";
+import { Clock, Calendar, MapPin, QrCode, User, BookOpen, GraduationCap, ArrowRight, Settings } from "lucide-react";
 import Link from "next/link";
+import EditProfileModal from "@/components/EditProfileModal";
 
-type Profile = { roll_no: string, full_name: string };
+type Profile = { id: string, roll_no: string, full_name: string, branch?: string, batch?: string };
 type Event = { id: string, name: string, event_time: string, venue: string, category: string };
 
 export default function Dashboard() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [registeredEvents, setRegisteredEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const router = useRouter();
 
   // Helper to extract branch and year from Roll No (e.g., Y20CS123)
@@ -75,7 +77,13 @@ export default function Dashboard() {
     </div>
   );
 
-  const studentInfo = profile ? getStudentDetails(profile.roll_no) : { batch: 'N/A', branch: 'N/A' };
+  const autoParsedInfo = profile ? getStudentDetails(profile.roll_no) : { batch: 'N/A', branch: 'N/A' };
+  
+  // Use database fields if they exist, otherwise fallback to auto-parser
+  const studentInfo = {
+    branch: profile?.branch || autoParsedInfo.branch,
+    batch: profile?.batch || autoParsedInfo.batch
+  };
 
   return (
     <div className="max-w-7xl mx-auto py-12 px-4 min-h-[80vh] relative z-10">
@@ -97,7 +105,15 @@ export default function Dashboard() {
               <QrCode size={120} className="text-white relative z-10 drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]" />
             </div>
             
-            <div className="text-center md:text-left space-y-4 flex-1">
+            <div className="text-center md:text-left space-y-4 flex-1 relative">
+              <button 
+                onClick={() => setIsEditModalOpen(true)}
+                className="absolute top-0 right-0 p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors border border-white/5"
+                title="Edit Profile"
+              >
+                <Settings size={18} className="text-gray-300" />
+              </button>
+
               <div>
                 <h2 className="text-sm text-[var(--color-electric-blue)] uppercase tracking-[0.3em] font-bold mb-2">Colorido 2K26 Digital Pass</h2>
                 <h1 className="text-4xl md:text-5xl font-black mb-1 text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-100 to-gray-400">
@@ -165,6 +181,27 @@ export default function Dashboard() {
             ))}
           </AnimatePresence>
         </div>
+      )}
+
+      {profile && (
+        <EditProfileModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          userId={profile.id}
+          initialData={{
+            full_name: profile.full_name,
+            branch: studentInfo.branch,
+            batch: studentInfo.batch
+          }}
+          onSuccess={(updatedData) => {
+            setProfile({
+              ...profile,
+              full_name: updatedData.full_name,
+              branch: updatedData.branch,
+              batch: updatedData.batch
+            });
+          }}
+        />
       )}
     </div>
   );
