@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+@theme {
+  --color-neon-pink: #ff2a85;
+  --color-electric-blue: #00f0ff;
+  --color-glass-bg: rgba(255, 255, 255, 0.05);
+  --color-glass-border: rgba(255, 255, 255, 0.1);
+  --color-dark-bg: #0a0a0a;
+}
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 15, 15, 25;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+  background: var(--color-glass-bg);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid var(--color-glass-border);
+  border-radius: 1rem;
+}
+
+.glass-button-pink {
+  background: rgba(255, 42, 133, 0.2);
+  border: 1px solid var(--color-neon-pink);
+  box-shadow: 0 0 10px rgba(255, 42, 133, 0.4);
+  transition: all 0.3s ease;
+}
+.glass-button-pink:hover {
+  background: rgba(255, 42, 133, 0.4);
+  box-shadow: 0 0 20px rgba(255, 42, 133, 0.6);
+}
+
+.glass-button-blue {
+  background: rgba(0, 240, 255, 0.2);
+  border: 1px solid var(--color-electric-blue);
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+  transition: all 0.3s ease;
+}
+.glass-button-blue:hover {
+  background: rgba(0, 240, 255, 0.4);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
+}
+
+/* Antigravity Floating animation */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
