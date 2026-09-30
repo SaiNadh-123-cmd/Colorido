@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Clock, Calendar, MapPin } from "lucide-react";
+import { Clock, Calendar, MapPin, QrCode } from "lucide-react";
 
 type Profile = { roll_no: string, full_name: string };
 type Event = { id: string, name: string, event_time: string, venue: string, category: string };
@@ -46,17 +46,32 @@ export default function Dashboard() {
       <motion.div 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="glass-panel p-8 mb-12 flex flex-col md:flex-row items-center justify-between"
+        className="glass-panel p-8 mb-12 flex flex-col md:flex-row items-center justify-between relative overflow-hidden"
       >
-        <div>
-          <h1 className="text-3xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
-            Welcome, {profile?.full_name}
-          </h1>
-          <p className="text-gray-400 font-mono">{profile?.roll_no}</p>
+        {/* Decorative background glow */}
+        <div className="absolute -right-20 -top-20 w-64 h-64 bg-[var(--color-electric-blue)] rounded-full blur-[100px] opacity-20 pointer-events-none"></div>
+
+        <div className="flex items-center gap-6 z-10">
+          <div className="hidden md:flex p-4 bg-white rounded-xl shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+            <QrCode size={80} className="text-black" />
+          </div>
+          <div>
+            <h2 className="text-sm text-gray-400 uppercase tracking-widest mb-1">Colorido 2K26 Digital Pass</h2>
+            <h1 className="text-3xl md:text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
+              {profile?.full_name}
+            </h1>
+            <div className="flex gap-4">
+              <p className="text-white font-mono bg-white/10 px-3 py-1 rounded-md">{profile?.roll_no}</p>
+              <p className="text-[var(--color-neon-pink)] font-mono text-sm flex items-center">
+                ID: {profile?.roll_no.substring(0,4)}-{Math.random().toString(36).substring(2,6).toUpperCase()}
+              </p>
+            </div>
+          </div>
         </div>
-        <div className="mt-4 md:mt-0 text-center">
+
+        <div className="mt-8 md:mt-0 text-center z-10 glass-panel px-8 py-4 border-[var(--color-electric-blue)] bg-black/40">
           <div className="text-5xl font-black text-[var(--color-electric-blue)]">{registeredEvents.length}</div>
-          <div className="text-sm uppercase tracking-widest text-gray-400 mt-1">Events Registered</div>
+          <div className="text-xs uppercase tracking-widest text-gray-400 mt-1">Events Registered</div>
         </div>
       </motion.div>
 
