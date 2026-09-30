@@ -47,17 +47,20 @@ export default function EventDetail() {
       return;
     }
 
-    // Play animation first
-    setShowAnimation(true);
-    
     // Insert into DB
     const { error } = await supabase.from("registrations").insert([
       { profile_id: user.id, event_id: event.id }
     ]);
     
-    if (error && error.code !== '23505') { // Ignore duplicate registration error for smooth UX
+    if (error && error.code !== '23505') { // Ignore duplicate registration error
       console.error(error);
+      alert(`Registration failed: ${error.message}`);
+      setRegistering(false);
+      return;
     }
+
+    // Play animation first
+    setShowAnimation(true);
 
     // Wait for animation to finish then redirect
     setTimeout(() => {
