@@ -33,7 +33,13 @@ export default function Register() {
     }
 
     if (authData.user) {
-      // Insert profile record
+      if (!authData.session) {
+        setError("Registration successful, but login failed. Please ensure 'Confirm email' is DISABLED in Supabase Auth settings.");
+        setLoading(false);
+        return;
+      }
+      
+      // Insert profile record only if session is active
       const { error: profileError } = await supabase.from('profiles').insert([
         { id: authData.user.id, roll_no: rollNo.toUpperCase(), full_name: fullName }
       ]);

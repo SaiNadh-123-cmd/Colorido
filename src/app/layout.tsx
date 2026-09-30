@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Link from "next/link";
 import { User } from "lucide-react";
+import Background3D from "@/components/Background3D";
 
 export const metadata: Metadata = {
   title: "Colorido 2K26 | Mega Culturals & Sports Fest",
@@ -16,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased bg-black text-white selection:bg-neon-pink selection:text-white">
-        <div className="fixed inset-0 z-[-1] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/20 via-black to-black"></div>
+        <Background3D />
         
         {/* Global Navbar */}
         <nav className="sticky top-0 z-50 glass-panel rounded-none border-t-0 border-l-0 border-r-0 border-b border-[var(--color-glass-border)] bg-black/50 backdrop-blur-xl">
